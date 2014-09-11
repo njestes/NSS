@@ -1,0 +1,97 @@
+﻿.tabs
+{
+	position:absolute;
+	background:#E7E4CE,;
+    border:0px;
+    bottom:0px;
+    top:11px;
+    right:0px;
+    left:0px;
+    min-width: 25em;
+}
+
+.tabs .tab
+{
+	position: absolute;
+	display: block;
+	top: 1.8em;
+	left: 1em;
+    right:1em;
+	padding: 10px 10px;
+	background-color: #ddd;
+	border-radius: 5px;
+	box-shadow: 0 3px 3px rgba(0,0,0,0.1);
+	bottom:10px;
+}
+
+.tabs .tab .tabLabel
+{
+	position: absolute;
+    display: inline-block;
+    cursor: pointer;
+	font-size: 1em;
+	font-weight: normal;
+	width: 120px;
+	height: 1.5em;
+    left:1em;
+	top: -1.5em;
+	padding: 0;
+	margin: 0;
+	color: #999;
+	background-color: #c6e1ec;
+	border-radius: 5px 5px 0 0;
+}
+
+.tabs .tab .tabLabel:hover{
+    background: #fff;
+}
+
+.tabs .tab input:checked + .tabLabel,
+.tabs .tab input:checked +tabLabel:hover{
+    background: #ddd;
+	color: #3d7489;
+	text-shadow: 0px 1px 1px rgba(255,255,255, 0.6);
+	/*box-shadow: 
+		0px 0px 0px 1px rgba(155,155,155,0.3), 
+		0px 2px 2px rgba(0,0,0,0.1);*/
+}
+.tabs .tab .tabhiddeninput{
+	display: none;
+}
+.tabs .tab:nth-child(2) .tabLabel, input
+{
+	left: 13.1em;
+    /*width: 6em;*/
+}
+
+.tabs .tab .tabhiddeninput:checked,
+.tabs .tab .tabhiddeninput:checked ~ .tabContent
+{    
+	color: #333;
+	background-color: #fff;
+	z-index: 20;
+}
+.tabs .tab .tabhiddeninput:checked ~ .tabContent
+{    
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	transition: all 500ms ease;
+    overflow: auto;     
+    position: absolute; 
+    top: 1em; 
+    right: 1em; 
+    left: 1em; 
+    bottom:1em;
+    display:block;
+}
+
+.tabs .tab .tabContent{
+    border-radius:5px;
+    display:none;
+}
+
+
+
+

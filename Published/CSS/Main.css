@@ -1,0 +1,66 @@
+﻿article, aside, details, figcaption, figure, footer, header, hgroup, nav, section {
+    display: block;
+}
+audio, canvas, video {
+    display: inline-block;
+}
+audio:not([controls]) {
+    display: none;
+}
+[hidden] {
+    display: none;
+}
+html {
+    font-size: 100%;
+    overflow-y: scroll;
+}
+body {
+    font-size: 13px;
+    line-height: 1.231;
+    margin-top: 3em;
+}
+body, button, input, select, textarea {
+    color: #222;
+    font-family: sans-serif;
+}
+
+fieldset{
+    border:0;
+    margin: 0;
+}
+ul,li{
+    list-style: none;
+    padding: 0;
+    margin: 0px   
+}
+#layout{
+    width: 100%; 
+    height:900px;
+    padding:20px;
+    background-color:#59595C;
+	border-radius: 10px;
+}
+span.description{
+    
+    line-height:150%;
+	float: left;
+}
+input.values
+{
+    float:right;
+	font-size:100%;
+	margin:0;
+	width:30%;
+}
+span{
+    color: #777;
+    font-size:14px;
+    margin-left:0.5em;
+}
+.dpicker{
+    position:relative;
+    z-index:9999;
+    left:0;
+    float:right;
+    margin-right: 0.5em;
+}

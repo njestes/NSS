@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <!--requires IE to use the latest browser settings-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <title>Main Page</title>
+    <!--css ref-->   
+    <link rel="stylesheet" type="text/css" href="http://w2ui.com/src/w2ui-1.4.1.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+     
+    <link rel="stylesheet" type="text/css" href="CSS/Main.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/Accordian.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/Tab.css" />
+        
+    <!--lib ref-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="Scripts/noty/jquery.noty.js"></script>
+    <script src="Scripts/noty/themes/default.js"></script>
+    <script src="Scripts/noty/layouts/bottomRight.js"></script>
+
+    <!--<script src="Scripts/jquery-1.6.4.min.js"></script>-->
+    <script type="text/javascript" src="http://w2ui.com/src/w2ui-1.4.1.min.js"></script>
+    <script src="Scripts/knockout-3.1.0.js"></script>
+    <script src="Scripts/jquery-ui-1.10.4.min.js"></script>
+
+    <!--model Ref-->
+    <script src="ViewModels/MainVM.js"></script>
+    <script src="Models/Model.js"></script>
+    <script src="Models/Parameter.js"></script>
+    <!--config File-->
+    <script src="web.config.js"></script>
+</head>
+<body>
+    <div id="layout"></div>
+    <div id="nav">
+        <section id="tabLayout">
+            <article class="tabs">
+                <section id="tab1" class="tab">
+                    <input id="tb-1" class="tabhiddeninput" name="tab-1" type="radio" checked />
+                    <label for="tb-1" class="tabLabel" style="width:12em">Statistics/ Characteristics</label>
+                    <section class="tabContent">
+                        <section class="accordion">
+                            <section>
+                                <input id="ac-1" class="accHiddeninput" name="accordion-1" type="radio" checked />
+                                <label class="accLabel" for="ac-1">Step 1: Select a Senerio</label>
+                                <article class="accContent, ac-small">
+                                    <p>Select a Senerio</p>
+                                    <hr class="headerUnderline" />
+                                    <fieldset style="border:0;">
+                                        <ul data-bind="foreach: ModelList">
+                                            <li> <input type="radio" name="Senerio" data-bind="value: ModelType, checked: $root.SelectedSenerio, click: $root.SelectModel($data)" /><span data-bind="text: Description"></span></li>
+                                        
+                                        </ul>
+                                    </fieldset>
+                                </article>
+                            </section>
+                            <section>
+                                <input id="ac-2" data-bind="enable:SelectedSenerio() > 0" class="accHiddeninput" name="accordion-1" type="radio" />
+                                <label class="accLabel" for="ac-2">Step 2: Identify a Study Area </label>
+                                <article class="ac-medium">
+
+                                    <input style="margin-top: 1em;" type="checkbox" data-bind="checked: IsStudyAreaOmitted" />
+                                    <span>Manually configure parameters.</span>
+
+                                    <p>Select a Study reach by delineating a basin from a pourpoint or 
+                                        selecting a study reach from the map</p>
+                                    <hr class="headerUnderline" />
+                                    <input id="selectStudyButton" style="width:auto" value="Simulate delineation" data-bind="enable: SelectedSenerio() != 1, event: {click:SelectStudy()}"  type="button" />
+                                    <input id="selectStudyReach" style="width:auto" value="Simulate reach selection" data-bind="enable: SelectedSenerio() == 1, event: {click:SelectStudy()}" type="button" />
+
+                                    <p> Does the study area look correct?</p>
+                                    <hr class="headerUnderline" />
+
+                                    <input id="acceptStudyArea" style="width:auto" value="Accept" data-bind="enable: StudyAreaSelected(), event: {click: AcceptStudyArea()}" type="button" />
+                                    <input id="editStudyArea" style="width:auto" value="Edit" data-bind="enable: StudyAreaSelected(), event: {click: EditStudyArea()}" type="button" />
+                                    <input id="ClearStudyArea" style="width:auto" value="Clear" data-bind="enable: StudyAreaSelected(), event: {click: ClearStudyArea()}" type="button" />
+                                </article>
+                            </section>
+                            <section>
+                                <input id="ac-3" data-bind="enable: StudyAreaAccepted() || IsStudyAreaOmitted()" class="accHiddeninput" name="accordion-1" type="radio" />
+                                <label class="accLabel" for="ac-3">Step 3: Refine Parameters<font size="2em">(optional)</font></label>
+                                <article class="ac-large">                                    
+                                    <p>Refine parameters by editing fields.</p>
+                                    <hr class="headerUnderline" />
+                                    <fieldset style="border:0;">
+                                        <ul data-bind="foreach: SelectedModel().Parameters">
+                                            <li style="height:35px"> 
+                                                <span class="description" data-bind="text: name, event: {hover: value}"></span>   
+                                                <input class="values" data-bind="value: value" type="text" />                                           
+                                            </li>
+                                            <!--<li> <input type="radio" name="Senerio" data-bind="value: modelType, checked: $root.SelectedSenerio" /><span data-bind="text: description"></span></li>-->
+                                        </ul>
+                                    </fieldset>
+                                </article>
+                            </section>
+                            <section>
+                                <input id="ac-4" data-bind="enable: StudyAreaAccepted() || IsStudyAreaOmitted()" class="accHiddeninput" name="accordion-1" type="radio" />
+                                <label class="accLabel" for="ac-4">Step 4: Build a Flow Report</label>
+                                <article class="ac-medium">
+                                    <p>Select/Enter a start date and end date then select compute to generate flow report</p>
+                                    <hr class="headerUnderline" />
+                                    <section id="StreamflowSection">
+                                        <span style="font-size: x-large">Start Date: </span>
+                                        <input class="dpicker" data-bind="datepicker: SelectedModel().StartDate, datepickerOptions: { minDate: SelectedModel().MinDateRange()}, maxDate: SelectedModel().EndDate()" />
+                                        <br />                                        
+
+                                        <span style="font-size: x-large">End Date: </span>
+                                        <input class="dpicker" data-bind="datepicker: SelectedModel().EndDate, datepickerOptions: { maxDate: SelectedModel().MaxDateRange()}, minDate: SelectedModel().StartDate()" />
+                                        <br />
+                                    </section>
+
+                                    <br />
+                                    <input id="compute" style="width:auto" value="Compute Flow" data-bind="event: {click: Compute()}" type="button" />
+                                    <input id="reset" style="width:auto" value="Reset" data-bind="event: {click: Reset()}" type="button" />
+                                    <br />
+                                </article>
+                            </section>
+                        </section>
+                    </section>
+                </section>                
+                <section id="tab2" class="tab">
+                    <input id="tb-2" class="tabhiddeninput" name="tab-1" type="radio" />
+                    <label for="tb-2" class="tabLabel" style="width:12em">MapLayers</label>
+                    <section class="tabContent">
+                            <h1>yes this is tab 2</h1>
+                    </section>
+                </section>
+
+                <!--<section id="tab2">
+                    <h2><a href="#tab2">Other Tools</a></h2>
+                </section>-->
+            </article>
+        </section>
+    </div>
+     
+    
+    <script>
+       
+        $(function () {
+            var pstyle = 'border: 1px solid #dfdfdf; padding: 5px;';
+
+            $('#layout').w2layout({
+                name: 'layout',
+                panels: [
+                    //{ type: 'top', size: 50, resizable: false, style: pstyle, content: 'top' },
+                    { type: 'left', size: 400, maxSize:400, resizable : true, style: pstyle, content: $('#nav') },
+                    { type: 'main', style: pstyle, content: 'map' },
+                    { type: 'right', size: 400, visible: false, resizable: true, style: pstyle, content: 'report' }
+                ]
+            });
+
+            //hides the report panel
+            w2ui['layout'].hide('right',true);
+        });
+
+        function updateReportPanel() {
+            var comp = vm.ShowReport();
+            if (comp) {
+                w2ui['layout'].show('right');
+            }
+            else {
+                w2ui['layout'].hide('right');
+            }
+
+        }//end function
+
+        function getQueryVariable(variable) {
+            //queries url parameters
+            ///index.html?stateid=IA'
+
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) { return pair[1]; }
+            }
+            return (false);
+        }
+
+        //var popup = $.create("<div>").appendTo(document.body).addClass("popup").setStyle("border-radius", "5px");
+
+        // create the notification API
+        function Notify() {
+            var msg = vm.Message();
+
+            var n = noty(
+                {
+                    layout: 'bottomRight',
+                    theme: 'defaultTheme',
+                    type: 'alert',
+                    text: msg, // can be html or string
+                    dismissQueue: true, // If you want to use queue feature set this true
+                    template: '<div style="" class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+                    animation: {
+                        open: { height: 'toggle' },
+                        close: { height: 'toggle' },
+                        easing: 'swing',
+                        speed: 1000 // opening & closing animation speed
+                    },
+                    timeout: false, // delay for closing event. Set false for sticky notifications
+                    force: false, // adds notification to the beginning of queue when set to true
+                    modal: false,
+                    maxVisible: 5, // you can set max visible notification for dismissQueue true option,
+                    killer: false, // for close all notifications before show
+                    closeWith: ['click'], // ['click', 'button', 'hover']
+                    callback: {
+                        onShow: function () { },
+                        afterShow: function () { },
+                        onClose: function () { },
+                        afterClose: function () { }
+                    },
+                    buttons: false // an array of buttons
+                }
+                );
+
+            setTimeout(function () {
+                $.noty.closeAll();
+            }, 2000);
+
+        };
+    </script>
+    <script>
+        ko.bindingHandlers.minDate = {
+            update: function (element, valueAccessor) {
+                var value = ko.utils.unwrapObservable(valueAccessor()),
+                current = $(element).datepicker("option", "minDate", value);
+            }
+        }
+        ko.bindingHandlers.maxDate = {
+            update: function (element, valueAccessor) {
+                var value = ko.utils.unwrapObservable(valueAccessor()),
+                current = $(element).datepicker("option", "maxDate", value);
+            }
+        }
+
+        ko.bindingHandlers.datepicker = {
+            init: function (element, valueAccessor, allBindingsAccessor) {
+                var $el = $(element);
+
+                //initialize datepicker with some optional options
+                var options = allBindingsAccessor().datepickerOptions || {};
+                $el.datepicker(options);
+
+                //handle the field changing
+                ko.utils.registerEventHandler(element, "change", function () {
+                    var observable = valueAccessor();
+                    observable($el.datepicker("getDate"));
+                });
+
+                //handle disposal (if KO removes by the template binding)
+                ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                    $el.datepicker("destroy");
+                });
+
+            },
+            update: function (element, valueAccessor) {
+                var value = ko.utils.unwrapObservable(valueAccessor());
+
+                //handle date data coming via json from Microsoft
+                if (String(value).indexOf('/Date(') == 0) {
+                    value = new Date(parseInt(value.replace(/\/Date\((.*?)\)\//gi, "$1")));
+                }
+
+                current = $(element).datepicker("getDate");
+
+                if (value - current !== 0) {
+                    $(element).datepicker("setDate", value);
+                }
+            }
+        };
+
+        //default IA
+        stateID = getQueryVariable("state")
+        if (stateID === false) stateID = 'IA';
+
+        var vm = new MainViewModel(stateID, configuration.appSettings[0].value)
+        ko.applyBindings(vm, null);
+        vm.ShowReport.subscribe(updateReportPanel);
+        vm.Message.subscribe(Notify);
+
+    </script>
+</body>
+</html>
