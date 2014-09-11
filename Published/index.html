@@ -9,7 +9,6 @@
     <!--css ref-->   
     <link rel="stylesheet" type="text/css" href="http://w2ui.com/src/w2ui-1.4.1.min.css" />
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
-     
     <link rel="stylesheet" type="text/css" href="CSS/Main.css" />
     <link rel="stylesheet" type="text/css" href="CSS/Accordian.css" />
     <link rel="stylesheet" type="text/css" href="CSS/Tab.css" />
@@ -19,16 +18,18 @@
     <script src="Scripts/noty/jquery.noty.js"></script>
     <script src="Scripts/noty/themes/default.js"></script>
     <script src="Scripts/noty/layouts/bottomRight.js"></script>
-
-    <!--<script src="Scripts/jquery-1.6.4.min.js"></script>-->
     <script type="text/javascript" src="http://w2ui.com/src/w2ui-1.4.1.min.js"></script>
-    <script src="Scripts/knockout-3.1.0.js"></script>
-    <script src="Scripts/jquery-ui-1.10.4.min.js"></script>
+    <script src="Scripts/jquery-ui.min-1.11.1.js"></script>
+    <script src="Scripts/knockout-3.2.0.js"></script>
+    <!--<script type="text/javascript" src="Scripts/require.js"></script>-->
 
     <!--model Ref-->
-    <script src="ViewModels/MainVM.js"></script>
-    <script src="Models/Model.js"></script>
-    <script src="Models/Parameter.js"></script>
+    <script src="ViewModels/MainViewModel.js"></script>  
+    <script src="Models/Model/Model.js"></script>  
+    <script src="Models/Model/Parameter.js"></script>  
+    <script src="Models/FDCTM/FDCTM.js"></script>    
+    <script src="Models/FlowAnywhere/FlowAnywhere.js"></script>   
+    
     <!--config File-->
     <script src="web.config.js"></script>
 </head>
@@ -60,12 +61,8 @@
                                 <input id="ac-2" data-bind="enable:SelectedSenerio() > 0" class="accHiddeninput" name="accordion-1" type="radio" />
                                 <label class="accLabel" for="ac-2">Step 2: Identify a Study Area </label>
                                 <article class="ac-medium">
-
-                                    <input style="margin-top: 1em;" type="checkbox" data-bind="checked: IsStudyAreaOmitted" />
-                                    <span>Manually configure parameters.</span>
-
                                     <p>Select a Study reach by delineating a basin from a pourpoint or 
-                                        selecting a study reach from the map</p>
+                                       selecting a study reach from the map</p>
                                     <hr class="headerUnderline" />
                                     <input id="selectStudyButton" style="width:auto" value="Simulate delineation" data-bind="enable: SelectedSenerio() != 1, event: {click:SelectStudy()}"  type="button" />
                                     <input id="selectStudyReach" style="width:auto" value="Simulate reach selection" data-bind="enable: SelectedSenerio() == 1, event: {click:SelectStudy()}" type="button" />
@@ -79,7 +76,7 @@
                                 </article>
                             </section>
                             <section>
-                                <input id="ac-3" data-bind="enable: StudyAreaAccepted() || IsStudyAreaOmitted()" class="accHiddeninput" name="accordion-1" type="radio" />
+                                <input id="ac-3" data-bind="enable: SelectedSenerio() > 0" class="accHiddeninput" name="accordion-1" type="radio" />
                                 <label class="accLabel" for="ac-3">Step 3: Refine Parameters<font size="2em">(optional)</font></label>
                                 <article class="ac-large">                                    
                                     <p>Refine parameters by editing fields.</p>
@@ -154,7 +151,6 @@
             //hides the report panel
             w2ui['layout'].hide('right',true);
         });
-
         function updateReportPanel() {
             var comp = vm.ShowReport();
             if (comp) {
@@ -165,7 +161,6 @@
             }
 
         }//end function
-
         function getQueryVariable(variable) {
             //queries url parameters
             ///index.html?stateid=IA'
@@ -178,8 +173,6 @@
             }
             return (false);
         }
-
-        //var popup = $.create("<div>").appendTo(document.body).addClass("popup").setStyle("border-radius", "5px");
 
         // create the notification API
         function Notify() {
@@ -197,9 +190,9 @@
                         open: { height: 'toggle' },
                         close: { height: 'toggle' },
                         easing: 'swing',
-                        speed: 1000 // opening & closing animation speed
+                        speed: 2000 // opening & closing animation speed
                     },
-                    timeout: false, // delay for closing event. Set false for sticky notifications
+                    timeout: true, // delay for closing event. Set false for sticky notifications
                     force: false, // adds notification to the beginning of queue when set to true
                     modal: false,
                     maxVisible: 5, // you can set max visible notification for dismissQueue true option,
@@ -215,13 +208,14 @@
                 }
                 );
 
-            setTimeout(function () {
-                $.noty.closeAll();
-            }, 2000);
+            //setTimeout(function () {
+            //    $.noty.closeAll();
+            //}, 2000);
 
         };
     </script>
     <script>
+        
         ko.bindingHandlers.minDate = {
             update: function (element, valueAccessor) {
                 var value = ko.utils.unwrapObservable(valueAccessor()),
@@ -270,7 +264,6 @@
                 }
             }
         };
-
         //default IA
         stateID = getQueryVariable("state")
         if (stateID === false) stateID = 'IA';

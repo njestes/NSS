@@ -1,12 +1,5 @@
-//------------------------------------------------------------------------------
-//----- Model ------------------------------------------------------------------
-//------------------------------------------------------------------------------
-///<reference path="../../Scripts/typings/knockout/knockout.d.ts"/>
-///<reference path="Parameter.ts"/>
 
-// Class
 var Model = (function () {
-    // Constructor
     function Model(m, mt, d) {
         if (typeof m === "undefined") { m = ""; }
         if (typeof mt === "undefined") { mt = 0 /* UNDEFINED */; }
@@ -42,7 +35,6 @@ var Model = (function () {
         }
     };
     Model.prototype.ToJson = function () {
-        //to json
         return '';
     };
     Model.prototype.LoadResults = function (jsn) {
@@ -77,4 +69,3 @@ var ModelType;
     ModelType[ModelType["REGRESSION"] = 2] = "REGRESSION";
     ModelType[ModelType["SIMILAR"] = 3] = "SIMILAR";
 })(ModelType || (ModelType = {}));
-//# sourceMappingURL=Model.js.map

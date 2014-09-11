@@ -84,6 +84,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Models\FlowAnywhere\FlowAnywhere.ts" />
     <TypeScriptCompile Include="Models\Model\Model.ts" />
     <TypeScriptCompile Include="Models\Model\Parameter.ts" />
     <TypeScriptCompile Include="Models\FDCTM\FDCTM.ts" />

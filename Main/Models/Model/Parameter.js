@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-//----- Table ---------------------------------------------------------------
-//------------------------------------------------------------------------------
-///<reference path="../../Scripts/typings/knockout/knockout.d.ts"/>
 
-// Class
 var Parameter = (function () {
-    // Constructor
     function Parameter(n, v) {
         this.name = n;
         this.value = ko.observable(v);
@@ -17,5 +11,4 @@ var Parameter = (function () {
         return new Parameter(name, value);
     };
     return Parameter;
-})(); //end class
-//# sourceMappingURL=Parameter.js.map
+})();
